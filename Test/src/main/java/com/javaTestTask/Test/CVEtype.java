@@ -16,11 +16,11 @@ public class CVEtype {
     @JsonProperty("CVE_data_meta")
     private CVE_data_meta CVE_data_meta;
 
-    public com.javaTestTask.Test.CVE_data_meta getCVE_data_meta() {
+    public CVE_data_meta getCVE_data_meta() {
         return CVE_data_meta;
     }
 
-    public void setCVE_data_meta(com.javaTestTask.Test.CVE_data_meta CVE_data_meta) {
+    public void setCVE_data_meta(CVE_data_meta CVE_data_meta) {
         this.CVE_data_meta = CVE_data_meta;
     }
 

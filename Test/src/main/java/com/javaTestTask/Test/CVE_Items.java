@@ -10,10 +10,17 @@ import java.util.Map;
 public class CVE_Items {
     @JsonProperty("cve")
     private CVEtype cveType;
-//    @JsonProperty("problemtype")
-//    private Map problemType;
-//    @JsonProperty("references")
-//    private Map references;
+    @JsonProperty("publishedDate")
+    private String publishedDate;
+
+    public String getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(String publishedDate) {
+        this.publishedDate = publishedDate;
+    }
+
 
     public CVEtype getCveType() {
         return cveType;
@@ -23,13 +30,4 @@ public class CVE_Items {
         this.cveType = cveType;
     }
 
-//    @Override
-//    public String toString() {
-//        return "cveType{" +
-//                "cveType='" + cveType + '\'' +
-//                ", problemType='" + problemType + '\'' +
-//                ", references='" + references + '\'' +
-//                '}';
-//    }
-//
 }

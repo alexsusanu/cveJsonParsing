@@ -21,7 +21,7 @@ public class CVEItemsService {
         try{
             CVE cveMapper = objectMapper.readValue(file, CVE.class);
             cveMapper.getCVE_Items().stream()
-                                    .map(t -> t.getCveType().getCVE_data_meta().getId()).forEach(System.out::println);
+                                    .map(t -> t.getPublishedDate()).forEach(System.out::println);
         } catch (Exception e) {
             e.printStackTrace();
         }
