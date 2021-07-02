@@ -10,8 +10,18 @@ import java.util.Map;
 public class CVE_Items {
     @JsonProperty("cve")
     private CVEtype cveType;
+    @JsonProperty("impact")
+    private Impact impact;
     @JsonProperty("publishedDate")
     private String publishedDate;
+
+    public Impact getImpact() {
+        return impact;
+    }
+
+    public void setImpact(Impact impact) {
+        this.impact = impact;
+    }
 
     public String getPublishedDate() {
         return publishedDate;
@@ -20,7 +30,6 @@ public class CVE_Items {
     public void setPublishedDate(String publishedDate) {
         this.publishedDate = publishedDate;
     }
-
 
     public CVEtype getCveType() {
         return cveType;
