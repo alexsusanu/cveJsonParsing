@@ -104,6 +104,11 @@ public class CVEService{
         return localDate;
     }
 
+    /**
+     *
+     * @param cveItemsList
+     * @return list of severity (low medium high)
+     */
     public Set<String> getSeverity(List<CVE_Items> cveItemsList){
         BaseMetricV2 baseMetricV2 = null;
         Set<String> severity = new TreeSet<>();

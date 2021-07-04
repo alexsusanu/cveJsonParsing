@@ -3,14 +3,18 @@ package com.javaTestTask.Test.service;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.javaTestTask.Test.BaseMetricV2;
 import com.javaTestTask.Test.CVE;
 import com.javaTestTask.Test.CVE_Items;
+import com.javaTestTask.Test.Impact;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Service
 public class FileService {

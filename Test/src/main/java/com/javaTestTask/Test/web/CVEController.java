@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import java.time.Month;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 public class CVEController {
@@ -30,6 +31,13 @@ public class CVEController {
     @GetMapping("")
     public void testing(){
         List<CVE_Items> cveItemsList = fileService.readFile();
-        System.out.println(cveService.getSeverity(cveItemsList));
+        Set<String> stringSet = cveService.getSeverity(cveItemsList);
+        for(CVE_Items c : cveItemsList){
+            for(String s : stringSet){
+                if(s.equals("HIGH")){
+                    System.out.println(c.getPublishedDate());
+                }
+            }
+        }
     }
 }

@@ -22,6 +22,12 @@ public class CVE_Items {
         this.publishedDate = publishedDate;
     }
 
+    public CVE_Items(CVEtype cveType, String severity, String publishedDate){
+        this.cveType = cveType;
+        this.impact.getBaseMetricV2().setSeverity(severity);
+        this.publishedDate = publishedDate;
+    }
+
     public Impact getImpact() {
         return impact;
     }
