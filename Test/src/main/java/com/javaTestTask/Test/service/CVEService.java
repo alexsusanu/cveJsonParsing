@@ -15,6 +15,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -35,8 +36,20 @@ public class CVEService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Map<Month, Integer> perMonth = new HashMap<>();
+        int noCVE = 0;
         for(CVE_Items c : cveItemsList){
-            System.out.println(parseDate(c.getPublishedDate()));
+            Month month = parseDate(c.getPublishedDate()).getMonth();
+            String cve = c.getCveType().getData_type();
+            for(Month m : Month.values()){
+                if(m.equals(month) && cve.equalsIgnoreCase("CVE")){
+                    noCVE += 1;
+                }
+            }
+            perMonth.put(month, noCVE);
+        }
+        for(Map.Entry<Month, Integer> entry : perMonth.entrySet()){
+            System.out.println(entry.getKey() + " " + entry.getValue());
         }
     }
 
