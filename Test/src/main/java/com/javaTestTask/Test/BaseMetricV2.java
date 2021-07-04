@@ -1,10 +1,18 @@
 package com.javaTestTask.Test;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BaseMetricV2 {
     @JsonProperty("severity")
     private String severity;
+
+    public BaseMetricV2(){}
+
+    public BaseMetricV2(String severity){
+        this.severity = severity;
+    }
+
     public String getSeverity() {
         return severity;
     }

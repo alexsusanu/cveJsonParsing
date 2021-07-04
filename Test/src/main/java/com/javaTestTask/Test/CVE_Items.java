@@ -3,9 +3,6 @@ package com.javaTestTask.Test;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-import java.util.Map;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CVE_Items {
     @JsonProperty("cve")
@@ -14,6 +11,14 @@ public class CVE_Items {
     private Impact impact;
     @JsonProperty("publishedDate")
     private String publishedDate;
+
+    public CVE_Items() {}
+
+    public CVE_Items(CVEtype cveType, Impact impact, String publishedDate){
+        this.cveType = cveType;
+        this.impact = impact;
+        this.publishedDate = publishedDate;
+    }
 
     public Impact getImpact() {
         return impact;
