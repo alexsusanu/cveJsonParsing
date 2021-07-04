@@ -22,9 +22,14 @@ public class CVEController {
     private FileService fileService;
 
 
+//    @GetMapping("")
+//    public Map<Month, Integer> testing(){
+//        List<CVE_Items> cveItemsList = fileService.readFile();
+//        return cveService.cvePerMonth(cveItemsList);
+//    }
     @GetMapping("")
-    public Map<Month, Integer> testing(){
+    public void testing(){
         List<CVE_Items> cveItemsList = fileService.readFile();
-        return cveService.cvePerMonth(cveItemsList);
+        System.out.println(cveService.getSeverity(cveItemsList));
     }
 }

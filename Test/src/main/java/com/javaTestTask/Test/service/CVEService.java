@@ -2,6 +2,7 @@ package com.javaTestTask.Test.service;
 
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.javaTestTask.Test.BaseMetricV2;
 import com.javaTestTask.Test.CVE_Items;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -103,12 +104,15 @@ public class CVEService{
         return localDate;
     }
 
-    //TODO
-    //fail on null
-//    public String getSeverity(List<CVE_Items> cveItemsList){
-//        for(CVE_Items c : cveItemsList){
-//            System.out.println(c.getImpact().getBaseMetricV2().getSeverity());
-//        }
-//        return null;
-//    }
+    public Set<String> getSeverity(List<CVE_Items> cveItemsList){
+        BaseMetricV2 baseMetricV2 = null;
+        Set<String> severity = new TreeSet<>();
+        for(CVE_Items c : cveItemsList){
+            baseMetricV2 = c.getImpact().getBaseMetricV2();
+            if(baseMetricV2 != null){
+                severity.add(baseMetricV2.getSeverity());
+            }
+        }
+        return severity;
+    }
 }

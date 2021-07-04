@@ -1,6 +1,7 @@
 package com.javaTestTask.Test;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.springframework.stereotype.Component;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -14,6 +15,7 @@ public class BaseMetricV2 {
     public BaseMetricV2(String severity){
         this.severity = severity;
     }
+
 
     public String getSeverity() {
         return severity;
