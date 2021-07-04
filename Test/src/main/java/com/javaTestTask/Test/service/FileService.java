@@ -26,10 +26,17 @@ public class FileService {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         List<CVE_Items> cveItemsList = new ArrayList<>();
+        BaseMetricV2 baseMetricV2 = null;
+        Impact impact = null;
         try{
             CVE cveMapper = objectMapper.readValue(file, CVE.class);
             for(CVE_Items c : cveMapper.getCVE_Items()){
-                cveItemsList.add(new CVE_Items(c.getCveType(), c.getImpact(), c.getPublishedDate()));
+                if(c.getImpact() != null) {
+                    baseMetricV2 = c.getImpact().getBaseMetricV2();
+                    if (baseMetricV2 != null) {
+                        cveItemsList.add(new CVE_Items(c.getCveType(), c.getImpact(), c.getPublishedDate()));
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
+import java.text.ParseException;
 import java.time.Month;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,12 @@ public class CVEController {
         Set<String> stringSet = cveService.getSeverity(cveItemsList);
         for(CVE_Items c : cveItemsList){
             for(String s : stringSet){
-                if(s.equals("HIGH")){
-                    System.out.println(c.getPublishedDate());
+                if(s.equals(c.getImpact().getBaseMetricV2().getSeverity())){
+                    try {
+                        System.out.println(cveService.parseDate(c.getPublishedDate()));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
