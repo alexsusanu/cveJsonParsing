@@ -5,17 +5,17 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaTestTask.Test.CVE;
 import com.javaTestTask.Test.CVE_Items;
-import org.junit.Test;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class FileService {
     private File file = new File("CVE.json");
+
 
     public List<CVE_Items> readFile(){
         ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

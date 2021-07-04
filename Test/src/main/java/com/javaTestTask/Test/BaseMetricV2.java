@@ -1,8 +1,10 @@
 package com.javaTestTask.Test;
 
 import com.fasterxml.jackson.annotation.*;
+import org.springframework.stereotype.Component;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Component
 public class BaseMetricV2 {
     @JsonProperty("severity")
     private String severity;

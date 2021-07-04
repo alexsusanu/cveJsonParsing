@@ -1,33 +1,31 @@
 package com.javaTestTask.Test.service;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.javaTestTask.Test.CVE;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.javaTestTask.Test.CVE_Items;
-import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.sql.SQLOutput;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.Year;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class CVEService {
-    FileService fileService = new FileService();
-    List<CVE_Items> cveItemsList = fileService.readFile();
+public class CVEService{
 
-    private List<Integer> yearList(List<CVE_Items> cveItemsList) {
-        List<Integer> integerArrayList = new ArrayList<>();
+    /**
+      * @param cveItemsList
+      * @return list of all years, no duplicates, in order
+     */
+    public Set<Integer> yearList(List<CVE_Items> cveItemsList) {
+        Set<Integer> integerArrayList = new TreeSet<>();
         cveItemsList.forEach(y -> {
             try {
                 integerArrayList.add(parseDate(y.getPublishedDate()).getYear());
@@ -44,18 +42,23 @@ public class CVEService {
      * @return total number of CVE per month for all years
      * @throws ParseException
      */
-    private Map<Month, Integer> cvePerMonth(List<CVE_Items> cveItemsList) throws ParseException {
+    public Map<Month, Integer> cvePerMonth(List<CVE_Items> cveItemsList){
         Map<Month, Integer> perMonth = new HashMap<>();
         int noCVE = 0;
         for(CVE_Items c : cveItemsList){
-            Month month = parseDate(c.getPublishedDate()).getMonth();
             String cve = c.getCveType().getData_type();
+            Month month = null;
+            try {
+                month = parseDate(c.getPublishedDate()).getMonth();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             for(Month m : Month.values()){
-                if(m.equals(month) && cve.equalsIgnoreCase("CVE")){
+                if(month.equals(m) && cve.equalsIgnoreCase("CVE")){
                     noCVE += 1;
                 }
+                perMonth.put(month, noCVE);
             }
-            perMonth.put(month, noCVE);
         }
         //sort month
         perMonth = perMonth.entrySet().stream()
@@ -68,15 +71,14 @@ public class CVEService {
     /**
      * @param cveItemsList
      * @return no of CVE per month for each year
-     * @throws ParseException
      */
-    private Map<Integer, Map<Month, Integer>> cvePerMonthPerYear(List<CVE_Items> cveItemsList) throws ParseException {
+    public Map<Integer, Map<Month, Integer>> cvePerMonthPerYear(List<CVE_Items> cveItemsList){
         Map<Integer, Map<Month, Integer>> perMonthPerYear = new HashMap<>();
-        List<Integer> years = yearList(cveItemsList);
-        years.stream().forEach(y -> {
+        Set<Integer> years = yearList(cveItemsList);
+        years.forEach(y -> {
             try {
                 perMonthPerYear.put(y,cvePerMonth(cveItemsList));
-            } catch (ParseException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
@@ -93,11 +95,20 @@ public class CVEService {
      * @return LocalDate date
      * @throws ParseException
      */
-    private LocalDate parseDate(String dateFromFile) throws ParseException {
+    public LocalDate parseDate(String dateFromFile) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
         Date date = new Date();
         date = dateFormat.parse(dateFromFile);
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return localDate;
     }
+
+    //TODO
+    //fail on null
+//    public String getSeverity(List<CVE_Items> cveItemsList){
+//        for(CVE_Items c : cveItemsList){
+//            System.out.println(c.getImpact().getBaseMetricV2().getSeverity());
+//        }
+//        return null;
+//    }
 }
