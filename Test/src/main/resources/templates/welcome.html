@@ -6,10 +6,20 @@
 </head>
 <body>
     <h1>Welcome</h1>
-    <tr th:each="month : ${map}">
-        <td><p th:text="${month.key}"></p></td>
-        <td><p th:text="${month.value}"></p></td>
-    </tr>
-
+    <table>
+        <thead>
+        <th>Year</th>
+        <th th:each="levels : ${levels}">
+            <th th:each="text : ${levels}" th:text="${text}"></th>
+        </th>
+        </thead>
+        <tbody>
+            <tr th:each="map : ${map}">
+                <td th:text="${map.key}"></td>
+                <td th:each="text : ${map.value}" th:text="${text}" ></td>
+            </tr>
+        </tr>
+        </tbody>
+    </table>
 </body>
 </html>

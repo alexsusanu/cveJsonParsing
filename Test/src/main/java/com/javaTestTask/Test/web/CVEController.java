@@ -9,9 +9,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.Month;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class CVEController {
@@ -24,9 +23,10 @@ public class CVEController {
     @GetMapping("")
     public String testing (ModelMap modelMap) {
         List<CVE_Items> cveItemsList = fileService.readFile();
-        Map<Integer, Map<String, Integer>> map = cveService.getSeverityByDate(cveItemsList);
-        System.out.println(map);
+        Set<String> levels = cveService.getSeverity(cveItemsList);
+        Map<Integer, Map<String, Integer>> map = cveService.getTotalSeverityLevelsPerYear(cveItemsList);
         modelMap.put("map", map);
+        modelMap.put("levels", levels);
         return "welcome";
     }
 

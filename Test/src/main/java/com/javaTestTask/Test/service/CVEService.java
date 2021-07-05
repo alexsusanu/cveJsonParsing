@@ -112,7 +112,7 @@ public class CVEService{
      */
     public Set<String> getSeverity(List<CVE_Items> cveItemsList){
         BaseMetricV2 baseMetricV2 = null;
-        Set<String> severity = new TreeSet<>();
+        Set<String> severity = new TreeSet<>(Collections.reverseOrder());
         for(CVE_Items c : cveItemsList){
             baseMetricV2 = c.getImpact().getBaseMetricV2();
             if(baseMetricV2 != null){
@@ -122,10 +122,10 @@ public class CVEService{
         return severity;
     }
 
-    public Map<Integer, Map<String, Integer>> getSeverityByDate(List<CVE_Items> cveItemsList){
+    public Map<Integer, Map<String, Integer>> getTotalSeverityLevelsPerYear(List<CVE_Items> cveItemsList){
         Set<String> severity = getSeverity(cveItemsList);
         Map<Integer, Map<String, Integer>> integerList = new TreeMap<>();
-        Map<String, Integer> severityNo = new TreeMap<>();
+        Map<String, Integer> severityNo = new TreeMap<>(Collections.reverseOrder());
         int severityTotal = 0;
         for(CVE_Items c : cveItemsList){
             for(String s : severity){
@@ -143,32 +143,4 @@ public class CVEService{
         return  integerList;
     }
 
-    //TODO
-    //testing cve per month return
-//    FileService fileService = new FileService();
-//    @Test
-//    public void cvePerMonth(){
-//        List<CVE_Items> cveItemsList = fileService.readFile();
-//        Map<Month, Integer> perMonth = new HashMap<>();
-//        int noCVE = 0;
-//        for(CVE_Items c : cveItemsList){
-//            String cve = c.getCveType().getData_type();
-//            Month month = null;
-//            try {
-//                month = parseDate(c.getPublishedDate()).getMonth();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            for(Month m : Month.values()){
-//                if(month.equals(m) && cve.equalsIgnoreCase("CVE")){
-//                    noCVE += 1;
-//                }
-//                perMonth.put(month, noCVE);
-//            }
-//        }
-//        //sort month
-//        perMonth = perMonth.entrySet().stream()
-//                .sorted(Map.Entry.comparingByKey())
-//                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (o, n) -> o, LinkedHashMap::new));
-//    }
 }
