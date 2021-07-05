@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+</head>
+<body>
+    <h1>Welcome</h1>
+    <tr th:each="month : ${map}">
+        <td><p th:text="${month.key}"></p></td>
+        <td><p th:text="${month.value}"></p></td>
+    </tr>
+
+</body>
+</html>

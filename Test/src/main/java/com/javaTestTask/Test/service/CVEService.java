@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.javaTestTask.Test.BaseMetricV2;
 import com.javaTestTask.Test.CVE_Items;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -120,4 +121,54 @@ public class CVEService{
         }
         return severity;
     }
+
+    public Map<Integer, Map<String, Integer>> getSeverityByDate(List<CVE_Items> cveItemsList){
+        Set<String> severity = getSeverity(cveItemsList);
+        Map<Integer, Map<String, Integer>> integerList = new TreeMap<>();
+        Map<String, Integer> severityNo = new TreeMap<>();
+        int severityTotal = 0;
+        for(CVE_Items c : cveItemsList){
+            for(String s : severity){
+                if(c.getImpact().getBaseMetricV2().getSeverity().equals(s)){
+                    severityTotal += 1;
+                    severityNo.put(s, severityTotal);
+                }
+            }
+            try {
+                integerList.put(parseDate(c.getPublishedDate()).getYear(), severityNo);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return  integerList;
+    }
+
+    //TODO
+    //testing cve per month return
+//    FileService fileService = new FileService();
+//    @Test
+//    public void cvePerMonth(){
+//        List<CVE_Items> cveItemsList = fileService.readFile();
+//        Map<Month, Integer> perMonth = new HashMap<>();
+//        int noCVE = 0;
+//        for(CVE_Items c : cveItemsList){
+//            String cve = c.getCveType().getData_type();
+//            Month month = null;
+//            try {
+//                month = parseDate(c.getPublishedDate()).getMonth();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            for(Month m : Month.values()){
+//                if(month.equals(m) && cve.equalsIgnoreCase("CVE")){
+//                    noCVE += 1;
+//                }
+//                perMonth.put(month, noCVE);
+//            }
+//        }
+//        //sort month
+//        perMonth = perMonth.entrySet().stream()
+//                .sorted(Map.Entry.comparingByKey())
+//                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (o, n) -> o, LinkedHashMap::new));
+//    }
 }
