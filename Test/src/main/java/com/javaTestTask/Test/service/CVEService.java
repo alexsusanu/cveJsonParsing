@@ -1,7 +1,7 @@
 package com.javaTestTask.Test.service;
 
-import com.javaTestTask.Test.BaseMetricV2;
-import com.javaTestTask.Test.CVE_Items;
+import com.javaTestTask.Test.dto.BaseMetricV2;
+import com.javaTestTask.Test.dto.CVEItem;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
@@ -20,14 +20,10 @@ public class CVEService{
       * @param cveItemsList
       * @return list of all years, no duplicates, in order
      */
-    public Set<Integer> yearList(List<CVE_Items> cveItemsList) {
+    public Set<Integer> yearList(List<CVEItem> cveItemsList) {
         Set<Integer> integerArrayList = new TreeSet<>();
         cveItemsList.forEach(y -> {
-            try {
-                integerArrayList.add(parseDate(y.getPublishedDate()).getYear());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            integerArrayList.add(parseDate(y.getPublishedDate()).getYear());
         });
         return integerArrayList;
     }
@@ -38,11 +34,11 @@ public class CVEService{
      * @return total number of CVE per month for all years
      * @throws ParseException
      */
-    public Map<Month, Integer> cvePerMonth(List<CVE_Items> cveItemsList){
+    public Map<Month, Integer> cvePerMonth(List<CVEItem> cveItemsList){
         Map<Month, Integer> perMonth = new HashMap<>();
         int noCVE = 0;
-        for(CVE_Items c : cveItemsList){
-            String cve = c.getCveType().getData_type();
+        for(CVEItem c : cveItemsList){
+            String cve = c.getCveType().getDataType();
             Month month = null;
             try {
                 month = parseDate(c.getPublishedDate()).getMonth();
@@ -68,7 +64,7 @@ public class CVEService{
      * @param cveItemsList
      * @return no of CVE per month for each year
      */
-    public Map<Integer, Map<Month, Integer>> cvePerMonthPerYear(List<CVE_Items> cveItemsList){
+    public Map<Integer, Map<Month, Integer>> cvePerMonthPerYear(List<CVEItem> cveItemsList){
         Map<Integer, Map<Month, Integer>> perMonthPerYear = new HashMap<>();
         Set<Integer> years = yearList(cveItemsList);
         years.forEach(y -> {
@@ -91,10 +87,14 @@ public class CVEService{
      * @return LocalDate date
      * @throws ParseException
      */
-    public LocalDate parseDate(String dateFromFile) throws ParseException {
+    public LocalDate parseDate(String dateFromFile){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
         Date date = new Date();
-        date = dateFormat.parse(dateFromFile);
+        try{
+            date = dateFormat.parse(dateFromFile);
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return localDate;
     }
@@ -104,10 +104,10 @@ public class CVEService{
      * @param cveItemsList
      * @return list of severity (low medium high)
      */
-    public Set<String> getSeverity(List<CVE_Items> cveItemsList){
+    public Set<String> getSeverity(List<CVEItem> cveItemsList){
         BaseMetricV2 baseMetricV2 = null;
         Set<String> severity = new TreeSet<>(Collections.reverseOrder());
-        for(CVE_Items c : cveItemsList){
+        for(CVEItem c : cveItemsList){
             baseMetricV2 = c.getImpact().getBaseMetricV2();
             if(baseMetricV2 != null){
                 severity.add(baseMetricV2.getSeverity());
@@ -116,25 +116,13 @@ public class CVEService{
         return severity;
     }
 
-    public Map<Integer, Map<String, Integer>> getTotalSeverityLevelsPerYear(List<CVE_Items> cveItemsList){
+    public Map<Integer, Map<String, List<CVEItem>>> getTotalSeverityLevelsPerYear(List<CVEItem> cveItemsList){
         Set<String> severity = getSeverity(cveItemsList);
-        Map<Integer, Map<String, Integer>> integerList = new TreeMap<>();
         Map<String, Integer> severityNo = new TreeMap<>(Collections.reverseOrder());
-        int severityTotal = 0;
-        for(CVE_Items c : cveItemsList){
-            for(String s : severity){
-                if(c.getImpact().getBaseMetricV2().getSeverity().equals(s)){
-                    severityTotal += 1;
-                    severityNo.put(s, severityTotal);
-                }
-            }
-            try {
-                integerList.put(parseDate(c.getPublishedDate()).getYear(), severityNo);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        return  integerList;
+        Map<Integer, Map<String, List<CVEItem>>> data = cveItemsList.stream()
+                .collect(Collectors.groupingBy((cveItem) -> parseDate(cveItem.getPublishedDate()).getYear(),
+                            Collectors.groupingBy((cveItem) -> cveItem.getImpact().getBaseMetricV2().getSeverity())));
+        return  data;
     }
 
 }

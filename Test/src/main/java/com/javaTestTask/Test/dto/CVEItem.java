@@ -1,22 +1,20 @@
-package com.javaTestTask.Test;
+package com.javaTestTask.Test.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.stereotype.Component;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Component
-public class CVE_Items {
+public class CVEItem {
     @JsonProperty("cve")
-    private CVEtype cveType;
+    private CVEType cveType;
     @JsonProperty("impact")
     private Impact impact;
     @JsonProperty("publishedDate")
     private String publishedDate;
 
-    public CVE_Items() {}
+    public CVEItem() {}
 
-    public CVE_Items(CVEtype cveType, Impact impact, String publishedDate){
+    public CVEItem(CVEType cveType, Impact impact, String publishedDate){
         this.cveType = cveType;
         this.impact = impact;
         this.publishedDate = publishedDate;
@@ -38,11 +36,11 @@ public class CVE_Items {
         this.publishedDate = publishedDate;
     }
 
-    public CVEtype getCveType() {
+    public CVEType getCveType() {
         return cveType;
     }
 
-    public void setCveType(CVEtype cveType) {
+    public void setCveType(CVEType cveType) {
         this.cveType = cveType;
     }
 

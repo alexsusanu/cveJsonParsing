@@ -3,22 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
+    <style>
+        table{
+            border: 1px solid black;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome</h1>
-    <table>
-        <thead>
-        <th th:each="levels : ${levels}">
-            <th>Year</th>
-            <th th:each="text : ${levels}" th:text="${text}"></th>
-        </th>
-        </thead>
-        <tbody>
-            <tr th:each="entry : ${entry.entrySet()}">
-                <td th:text="${entry.key}"></td>
-                <td th:each="innerEntry : ${entry.getValue().entrySet()}" th:text="${innerEntry.getValue()}"></td>
-            </tr>
-        </tbody>
-    </table>
+    <div>
+        <table>
+            <thead>
+                <tr th:each="levels : ${levels}">
+                    <tr>
+                    <th th:each="text : ${levels}" th:text="${text}"></th>
+                    </tr>
+                </tr>
+<!--                <th>Year</th>-->
+            </thead>
+            <tbody>
+                <tr th:each="entry : ${entry.entrySet()}">
+                    <td th:text="${entry.key}"></td>
+                    <td th:each="innerEntry : ${entry.getValue().entrySet()}" th:text="${innerEntry.getValue()}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

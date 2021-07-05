@@ -1,11 +1,8 @@
-package com.javaTestTask.Test;
+package com.javaTestTask.Test.dto;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.springframework.stereotype.Component;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Component
 public class BaseMetricV2 {
     @JsonProperty("severity")
     private String severity;
