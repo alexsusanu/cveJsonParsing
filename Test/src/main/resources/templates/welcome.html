@@ -8,17 +8,16 @@
     <h1>Welcome</h1>
     <table>
         <thead>
-        <th>Year</th>
         <th th:each="levels : ${levels}">
+            <th>Year</th>
             <th th:each="text : ${levels}" th:text="${text}"></th>
         </th>
         </thead>
         <tbody>
-            <tr th:each="map : ${map}">
-                <td th:text="${map.key}"></td>
-                <td th:each="text : ${map.value}" th:text="${text}" ></td>
+            <tr th:each="entry : ${entry.entrySet()}">
+                <td th:text="${entry.key}"></td>
+                <td th:each="innerEntry : ${entry.getValue().entrySet()}" th:text="${innerEntry.getValue()}"></td>
             </tr>
-        </tr>
         </tbody>
     </table>
 </body>

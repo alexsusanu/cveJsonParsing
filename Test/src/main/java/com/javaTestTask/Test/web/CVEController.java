@@ -23,10 +23,15 @@ public class CVEController {
     @GetMapping("")
     public String testing (ModelMap modelMap) {
         List<CVE_Items> cveItemsList = fileService.readFile();
-        Set<String> levels = cveService.getSeverity(cveItemsList);
+        Set<String> levelsAmount = cveService.getSeverity(cveItemsList);
         Map<Integer, Map<String, Integer>> map = cveService.getTotalSeverityLevelsPerYear(cveItemsList);
-        modelMap.put("map", map);
-        modelMap.put("levels", levels);
+        for(Map.Entry<Integer, Map<String, Integer>> entry : map.entrySet()){
+            for(Map.Entry<String, Integer> innerEntry : entry.getValue().entrySet()){
+                System.out.println(innerEntry.getValue());
+            }
+        }
+        modelMap.put("entry", map);
+        modelMap.put("levels", levelsAmount);
         return "welcome";
     }
 

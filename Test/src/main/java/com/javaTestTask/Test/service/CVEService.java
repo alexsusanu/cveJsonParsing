@@ -1,15 +1,9 @@
 package com.javaTestTask.Test.service;
 
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.javaTestTask.Test.BaseMetricV2;
 import com.javaTestTask.Test.CVE_Items;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.sql.SQLOutput;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
