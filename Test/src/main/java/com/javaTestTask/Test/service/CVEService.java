@@ -1,39 +1,38 @@
 package com.javaTestTask.Test.service;
 
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.javaTestTask.Test.BaseMetricV2;
-import com.javaTestTask.Test.CVE_Items;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.sql.SQLOutput;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+
+import com.javaTestTask.Test.dto.BaseMetricV2Dto;
+import com.javaTestTask.Test.dto.CVEItemDto;
+
 @Service
-public class CVEService{
+public class CVEService {
 
     /**
-      * @param cveItemsList
-      * @return list of all years, no duplicates, in order
+     * @param cveItemsList
+     * @return list of all years, no duplicates, in order
      */
-    public Set<Integer> yearList(List<CVE_Items> cveItemsList) {
+    public Set<Integer> yearList(List<CVEItemDto> cveItemsList) {
         Set<Integer> integerArrayList = new TreeSet<>();
         cveItemsList.forEach(y -> {
-            try {
-                integerArrayList.add(parseDate(y.getPublishedDate()).getYear());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            integerArrayList.add(parseDate(y.getPublishedDate()).getYear());
         });
         return integerArrayList;
     }
@@ -44,65 +43,68 @@ public class CVEService{
      * @return total number of CVE per month for all years
      * @throws ParseException
      */
-    public Map<Month, Integer> cvePerMonth(List<CVE_Items> cveItemsList){
+    public Map<Month, Integer> cvePerMonth(List<CVEItemDto> cveItemsList) {
         Map<Month, Integer> perMonth = new HashMap<>();
         int noCVE = 0;
-        for(CVE_Items c : cveItemsList){
-            String cve = c.getCveType().getData_type();
+        for (CVEItemDto c : cveItemsList) {
+            String cve = c.getCveType().getDataType();
             Month month = null;
             try {
                 month = parseDate(c.getPublishedDate()).getMonth();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            for(Month m : Month.values()){
-                if(month.equals(m) && cve.equalsIgnoreCase("CVE")){
+            for (Month m : Month.values()) {
+                if (month.equals(m) && cve.equalsIgnoreCase("CVE")) {
                     noCVE += 1;
                 }
                 perMonth.put(month, noCVE);
             }
         }
-        //sort month
+        // sort month
         perMonth = perMonth.entrySet().stream()
-                           .sorted(Map.Entry.comparingByKey())
-                           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (o, n) -> o, LinkedHashMap::new));
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (o, n) -> o, LinkedHashMap::new));
         return perMonth;
     }
-
 
     /**
      * @param cveItemsList
      * @return no of CVE per month for each year
      */
-    public Map<Integer, Map<Month, Integer>> cvePerMonthPerYear(List<CVE_Items> cveItemsList){
+    public Map<Integer, Map<Month, Integer>> cvePerMonthPerYear(List<CVEItemDto> cveItemsList) {
         Map<Integer, Map<Month, Integer>> perMonthPerYear = new HashMap<>();
         Set<Integer> years = yearList(cveItemsList);
         years.forEach(y -> {
             try {
-                perMonthPerYear.put(y,cvePerMonth(cveItemsList));
+                perMonthPerYear.put(y, cvePerMonth(cveItemsList));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
-        //sort year
+        // sort year
         return perMonthPerYear.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (o, n) -> o, LinkedHashMap::new));
     }
 
-
     /**
      * parse string into date
+     * 
      * @param dateFromFile string date
      * @return LocalDate date
      * @throws ParseException
      */
-    public LocalDate parseDate(String dateFromFile) throws ParseException {
+    public LocalDate parseDate(String dateFromFile) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
         Date date = new Date();
-        date = dateFormat.parse(dateFromFile);
-        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return localDate;
+        try {
+            date = dateFormat.parse(dateFromFile);
+            LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            return localDate;
+        } catch (ParseException e) {
+            return null;
+        }
     }
 
     /**
@@ -110,37 +112,44 @@ public class CVEService{
      * @param cveItemsList
      * @return list of severity (low medium high)
      */
-    public Set<String> getSeverity(List<CVE_Items> cveItemsList){
-        BaseMetricV2 baseMetricV2 = null;
+    public Set<String> getSeverity(List<CVEItemDto> cveItemsList) {
+        BaseMetricV2Dto baseMetricV2 = null;
         Set<String> severity = new TreeSet<>(Collections.reverseOrder());
-        for(CVE_Items c : cveItemsList){
+        for (CVEItemDto c : cveItemsList) {
             baseMetricV2 = c.getImpact().getBaseMetricV2();
-            if(baseMetricV2 != null){
+            if (baseMetricV2 != null) {
                 severity.add(baseMetricV2.getSeverity());
             }
         }
         return severity;
     }
 
-    public Map<Integer, Map<String, Integer>> getTotalSeverityLevelsPerYear(List<CVE_Items> cveItemsList){
+    public Map<Integer, Map<String, List<CVEItemDto>>> getTotalSeverityLevelsPerYear(List<CVEItemDto> cveItemsList) {
         Set<String> severity = getSeverity(cveItemsList);
         Map<Integer, Map<String, Integer>> integerList = new TreeMap<>();
         Map<String, Integer> severityNo = new TreeMap<>(Collections.reverseOrder());
-        int severityTotal = 0;
-        for(CVE_Items c : cveItemsList){
-            for(String s : severity){
-                if(c.getImpact().getBaseMetricV2().getSeverity().equals(s)){
-                    severityTotal += 1;
-                    severityNo.put(s, severityTotal);
-                }
-            }
-            try {
-                integerList.put(parseDate(c.getPublishedDate()).getYear(), severityNo);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        return  integerList;
+
+        // group by year first, then group by severity within each "year bucket"
+        Map<Integer, Map<String, List<CVEItemDto>>> data = cveItemsList.stream()
+                .collect(Collectors.groupingBy((cveItem) -> parseDate(cveItem.getPublishedDate()).getYear(),
+                        Collectors.groupingBy((cveItem) -> cveItem.getImpact().getBaseMetricV2().getSeverity())));
+
+        System.out.println(data);
+
+//        for (CVEItemDto c : cveItemsList) {
+//            for (String s : severity) {
+//                if (c.getImpact().getBaseMetricV2().getSeverity().equals(s)) {
+//                    // LOW, MEDIUM, HIGH
+//                    if (severityNo.containsKey(s)) {
+//                        severityNo.put(s, severityNo.get(s) + 1);
+//                    } else {
+//                        severityNo.put(s, 1);
+//                    }
+//                }
+//            }
+//            integerList.put(parseDate(c.getPublishedDate()).getYear(), severityNo);
+//        }
+        return data;
     }
 
 }

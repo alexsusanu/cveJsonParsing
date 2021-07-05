@@ -1,32 +1,31 @@
-package com.javaTestTask.Test;
+package com.javaTestTask.Test.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.stereotype.Component;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Component
-public class CVE_Items {
+public class CVEItemDto {
     @JsonProperty("cve")
-    private CVEtype cveType;
+    private CVETypeDto cveType;
     @JsonProperty("impact")
-    private Impact impact;
+    private ImpactDto impact;
     @JsonProperty("publishedDate")
     private String publishedDate;
 
-    public CVE_Items() {}
+    public CVEItemDto() {
+    }
 
-    public CVE_Items(CVEtype cveType, Impact impact, String publishedDate){
+    public CVEItemDto(CVETypeDto cveType, ImpactDto impact, String publishedDate) {
         this.cveType = cveType;
         this.impact = impact;
         this.publishedDate = publishedDate;
     }
 
-    public Impact getImpact() {
+    public ImpactDto getImpact() {
         return impact;
     }
 
-    public void setImpact(Impact impact) {
+    public void setImpact(ImpactDto impact) {
         this.impact = impact;
     }
 
@@ -38,12 +37,17 @@ public class CVE_Items {
         this.publishedDate = publishedDate;
     }
 
-    public CVEtype getCveType() {
+    public CVETypeDto getCveType() {
         return cveType;
     }
 
-    public void setCveType(CVEtype cveType) {
+    public void setCveType(CVETypeDto cveType) {
         this.cveType = cveType;
+    }
+
+    @Override
+    public String toString() {
+        return "CVEItemDto [cveType=" + cveType + ", impact=" + impact + ", publishedDate=" + publishedDate + "]";
     }
 
 }

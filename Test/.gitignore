@@ -36,3 +36,6 @@ build/
 .mvn/*
 !**../.DS_Store
 !**../.idea/*
+
+### Eclipse ###
+/bin/
