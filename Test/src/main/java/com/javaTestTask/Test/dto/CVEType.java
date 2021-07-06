@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CVEType {
-    @JsonProperty("dataType")
+    @JsonProperty("data_type")
     private String dataType;
 
     public CVEType(){}
