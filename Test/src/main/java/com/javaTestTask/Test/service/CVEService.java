@@ -117,8 +117,6 @@ public class CVEService{
     }
 
     public Map<Integer, Map<String, List<CVEItem>>> getTotalSeverityLevelsPerYear(List<CVEItem> cveItemsList){
-        Set<String> severity = getSeverity(cveItemsList);
-        Map<String, Integer> severityNo = new TreeMap<>(Collections.reverseOrder());
         Map<Integer, Map<String, List<CVEItem>>> data = cveItemsList.stream()
                 .collect(Collectors.groupingBy((cveItem) -> parseDate(cveItem.getPublishedDate()).getYear(),
                             Collectors.groupingBy((cveItem) -> cveItem.getImpact().getBaseMetricV2().getSeverity())));
