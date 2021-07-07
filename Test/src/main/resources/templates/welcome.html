@@ -12,14 +12,18 @@
 <body>
     <div>
         <table>
-        <thead>
-            <th th:each="level : ${severityLevels}" th:text="${level}"></th>
-        </thead>
+            <thead>
+<!--            <th th:each="level : ${severityLevels}" th:text="${level}"></th>-->
+                <tr>LOW</tr>
+                <tr>MEDIUM</tr>
+                <tr>HIGH</tr>
+            </thead>
         <tbody>
-            <tr th:each="severityPerYear :${severityPerYear.entrySet()}">
-                <td th:text="${severityPerYear.key}"></td>
-                <td th:each="innerSet : ${severityPerYear.getValue().entrySet()}"></td>
-                <td th:each="innerSet : ${severityPerYear.getValue().entrySet()}" th:text="${innerSet.getValue()}"></td>
+            <tr th:each="entry :${severityPerYear.entrySet()}">
+                <td th:text="${entry.key}"></td>
+                <td th:each="innerEntryKey, innerEntryValue : ${entry.getValue().entrySet()}" th:if="${innerEntryKey.getKey() == 'LOW'}" th:text="${innerEntryKey.getValue()}"></td>
+                <td th:each="innerEntryKey, innerEntryValue : ${entry.getValue().entrySet()}" th:if="${innerEntryKey.getKey() == 'MEDIUM'}" th:text="${innerEntryKey.getValue()}"></td>
+                <td th:each="innerEntryKey, innerEntryValue : ${entry.getValue().entrySet()}" th:if="${innerEntryKey.getKey() == 'HIGH'}" th:text="${innerEntryKey.getValue()}"></td>
             </tr>
         </tbody>
         </table>

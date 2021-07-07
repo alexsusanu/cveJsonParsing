@@ -24,17 +24,8 @@ public class CVEController {
         List<CVEItem> cveItemsList = fileService.readFile();
         Map<Integer, Map<String, Long>> severityPerYear = cveService.getTotalSeverityLevelsPerYear(cveItemsList);
         Set<String> severityLevelsSet = cveService.severityLevelsSet(cveItemsList); // severity levels list (low, med, high)
-
-        severityPerYear.entrySet().stream().forEach(entry -> {
-            entry.getValue().entrySet().stream().forEach(innerEntry -> {
-                if(innerEntry.getKey().equals("HIGH")){
-                    System.out.println(entry.getKey() + " " + innerEntry.getKey() + " " + innerEntry.getValue());
-                }
-            });
-        });
-
-        modelMap.put("severityLevels", severityLevelsSet);
         modelMap.put("severityPerYear", severityPerYear);
+        modelMap.put("severityLevels", severityLevelsSet);
         return "welcome";
     }
 
