@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
-    <style>
-        table{
-            border: 1px solid black;
-        }
-    </style>
+    <link rel="stylesheet" href="../static/style.css" th:href="@{style.css}"/>
 </head>
 <body>
     <div>
-        <table>
+        <table class="styled-table">
             <thead>
-<!--            <th th:each="level : ${severityLevels}" th:text="${level}"></th>-->
-                <tr>LOW</tr>
-                <tr>MEDIUM</tr>
-                <tr>HIGH</tr>
+                <tr>
+                    <td>Year</td>
+                    <td>LOW</td>
+                    <td>MEDIUM</td>
+                    <td>HIGH</td>
+                </tr>
             </thead>
         <tbody>
             <tr th:each="entry :${severityPerYear.entrySet()}">
