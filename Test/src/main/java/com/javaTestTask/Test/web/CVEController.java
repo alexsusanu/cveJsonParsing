@@ -9,6 +9,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class CVEController {
@@ -21,25 +22,19 @@ public class CVEController {
     @GetMapping("")
     public String testing (ModelMap modelMap) {
         List<CVEItem> cveItemsList = fileService.readFile();
-//        Set<String> levelsAmount = cveService.getSeverity(cveItemsList);
-//        Map<Integer, Map<String, Long>> map = cveService.getTotalSeverityLevelsPerYear(cveItemsList);
-//        Map<Integer, Map<String, List<CVEItem>>> map = cveService.getTotalSeverityLevelsPerYear(cveItemsList);
-//        for(Map.Entry<Integer, Map<String, Integer>> entry : map.entrySet()){
-//            for(Map.Entry<String, Integer> innerEntry : entry.getValue().entrySet()){
-//                System.out.println(innerEntry.getValue());
-//            }
-//        }
-        Map<Object, Map<Object, Long>> map = cveService.getTotalCVEPerMonth(cveItemsList);
         Map<Integer, Map<String, Long>> severityPerYear = cveService.getTotalSeverityLevelsPerYear(cveItemsList);
+        Set<String> severityLevelsSet = cveService.severityLevelsSet(cveItemsList); // severity levels list (low, med, high)
+
         severityPerYear.entrySet().stream().forEach(entry -> {
-            System.out.println(entry.getKey());
-            entry.getValue().entrySet().stream().forEach(e -> System.out.println(e.getKey() + " " + e.getValue()));
+            entry.getValue().entrySet().stream().forEach(innerEntry -> {
+                if(innerEntry.getKey().equals("HIGH")){
+                    System.out.println(entry.getKey() + " " + innerEntry.getKey() + " " + innerEntry.getValue());
+                }
+            });
         });
-//        map.entrySet().stream().forEach(entry -> {
-//            System.out.println(entry.getValue());
-//        });
-        modelMap.put("entry", map);
-//        modelMap.put("levels", levelsAmount);
+
+        modelMap.put("severityLevels", severityLevelsSet);
+        modelMap.put("severityPerYear", severityPerYear);
         return "welcome";
     }
 

@@ -11,25 +11,18 @@
 </head>
 <body>
     <div>
-        <div th:text="${entry}">
-
-        </div>
-<!--        <table>-->
-<!--            <thead>-->
-<!--                <tr th:each="levels : ${levels}">-->
-<!--                    <tr>-->
-<!--                    <th th:each="text : ${levels}" th:text="${text}"></th>-->
-<!--                    </tr>-->
-<!--                </tr>-->
-<!--&lt;!&ndash;                <th>Year</th>&ndash;&gt;-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--                <tr th:each="entry : ${entry.entrySet()}">-->
-<!--                    <td th:text="${entry.key}"></td>-->
-<!--                    <td th:each="innerEntry : ${entry.getValue().entrySet()}" th:text="${innerEntry.getValue()}"></td>-->
-<!--                </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
+        <table>
+        <thead>
+            <th th:each="level : ${severityLevels}" th:text="${level}"></th>
+        </thead>
+        <tbody>
+            <tr th:each="severityPerYear :${severityPerYear.entrySet()}">
+                <td th:text="${severityPerYear.key}"></td>
+                <td th:each="innerSet : ${severityPerYear.getValue().entrySet()}"></td>
+                <td th:each="innerSet : ${severityPerYear.getValue().entrySet()}" th:text="${innerSet.getValue()}"></td>
+            </tr>
+        </tbody>
+        </table>
     </div>
 </body>
 </html>
