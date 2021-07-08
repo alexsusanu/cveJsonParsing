@@ -20,7 +20,7 @@ public class CVEController {
     private FileService fileService;
 
     @GetMapping("")
-    public String testing (ModelMap modelMap) {
+    public String displayTable (ModelMap modelMap) {
         List<CVEItem> cveItemsList = fileService.readFile();
         Map<Integer, Map<String, Long>> severityPerYear = cveService.getTotalSeverityLevelsPerYear(cveItemsList);
         Set<String> severityLevelsSet = cveService.severityLevelsSet(cveItemsList); // severity levels list (low, med, high)
@@ -28,6 +28,4 @@ public class CVEController {
         modelMap.put("severityLevels", severityLevelsSet);
         return "welcome";
     }
-
-
 }
